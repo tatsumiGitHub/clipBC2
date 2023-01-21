@@ -216,6 +216,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 			String[] token = cmd.split(",", 2);
 			switch (token[0]) {
 				case "close":
+					currentPanel_idx = 0;
 					System.exit(0);
 					break;
 				case "clipboard":

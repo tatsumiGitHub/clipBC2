@@ -99,8 +99,10 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		}
 		MyButton.setCardList(card_list);
 		for (MyCard c : card_list) {
+			c.getScrollPane().setVisible(false);
 			MainPanel.add(c.getScrollPane());
 		}
+		card_list.get(0).getScrollPane().setVisible(true);
 
 		////////////////////////////
 		///// add Button Panel /////
