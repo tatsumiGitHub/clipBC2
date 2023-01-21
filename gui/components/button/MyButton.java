@@ -1,6 +1,7 @@
 package gui.components.button;
 
 import java.util.ArrayList;
+import java.io.*;
 
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
@@ -8,6 +9,7 @@ import javax.swing.plaf.DimensionUIResource;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.awt.datatransfer.*;
 
 import gui.components.*;
 import gui.components.combobox.*;
@@ -22,6 +24,8 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 	private static int win_height = 0;
 	private static JPanel BasePanel = null;
 	private static CardLayout BaseLayout = null;
+	private static JPanel MainPanel = null;
+	private static JLabel InfoLabel = null;
 	private static int currentPanel_idx = 0;
 
 	private boolean enable_texture = false;
@@ -45,7 +49,6 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		if (cmd.equals("execute")) {
 			this.setEnabled(false);
 		}
-		currentPanel_idx = 0;
 	}
 
 	public void enableTexture() {
@@ -165,9 +168,11 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		win_height = _win_height;
 	}
 
-	public static void setBaseCard(JPanel _BasePanel, CardLayout _BaseLayout) {
+	public static void setBaseCard(JPanel _BasePanel, CardLayout _BaseLayout, JPanel _MaiPanel, JLabel _InfoLabel) {
 		BasePanel = _BasePanel;
 		BaseLayout = _BaseLayout;
+		MainPanel = _MaiPanel;
+		InfoLabel = _InfoLabel;
 	}
 
 	public static void setCardList(ArrayList<MyCard> _card_list) {
@@ -193,36 +198,119 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 				case "close":
 					System.exit(0);
 					break;
+				case "clipboard":
+					MyClipBoard.setClipBoard(token[1]);
+					break;
+				case "home":
+					card_list.get(currentPanel_idx).getScrollPane().setVisible(false);
+					currentPanel_idx = 0;
+					card_list.get(currentPanel_idx).getScrollPane().setVisible(true);
+					BaseLayout.show(BasePanel, "MainPanel");
+					break;
 				case "make_button":
-					if (ButtonType.getSelectedItem().equals("Clip Board") && TextField.getText() != null
-							&& TextArea.getText() != null) {
-						if (!TextField.getText().trim().equals("")) {
-							if (!TextArea.getText().trim().equals("")) {
-								int component_num = card_list.get(currentPanel_idx).getComponentList().size();
+					switch (ButtonType.getSelectedIndex()) {
+						case 0:
+							try {
+								if (!TextField.getText().trim().equals("") && !TextArea.getText().trim().equals("")) {
+									MyButton button;
+									int component_num = card_list.get(currentPanel_idx).getComponentList().size();
+									button = new MyButton(20, TextField.getText(),
+											"clipboard," + TextArea.getText(),
+											new Color(6, 42, 120));
+									button.enableTexture();
+									card_list.get(currentPanel_idx).getComponentList().add(button);
 
-								MyButton button;
-								button = new MyButton(20, TextField.getText(), "mov_card,gpgpu-sim", new Color(6, 42, 120));
-								button.enableTexture();
-								card_list.get(currentPanel_idx).getComponentList().add(button);
-								
-								GridBagConstraints gbc = new GridBagConstraints();
+									GridBagConstraints gbc = new GridBagConstraints();
+									gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
+									gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
+									gbc.gridwidth = (win_width - 140) / 2 - 40;
+									gbc.gridheight = 30;
+									gbc.weightx = 1.0d;
+									gbc.fill = GridBagConstraints.NONE;
+									gbc.insets = new Insets(10, 10, 10, 10);
+									((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+											.getLayout())).setConstraints(button, gbc);
 
-								gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
-								gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
-								gbc.gridwidth = (win_width - 140) / 2 - 40;
-								gbc.gridheight = 30;
-								gbc.weightx = 1.0d;
-								gbc.fill = GridBagConstraints.NONE;
-								gbc.insets = new Insets(10, 10, 10, 10);
-								((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0).getLayout())).setConstraints(button, gbc);
-								card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
-								ObjectIO.saveObject(".obj/object_list.dat", card_list);
-							} else {
-								System.out.println("Info: No Text in Text Field");
+									card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
+
+									ObjectIO.saveObject(".obj/object_list.dat", card_list);
+									System.out.println("Info: Make New Button (" + currentPanel_idx + ", "
+											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
+								} else {
+									if (TextField.getText().trim().equals("")) {
+										System.out.println("Info: No Text in Text Field");
+									} else if (TextArea.getText().trim().equals("")) {
+										System.out.println("Info: No Text in Text Area");
+									}
+								}
+							} catch (NullPointerException err) {
+								err.printStackTrace();
+								JOptionPane.showMessageDialog(this, err.getMessage(), "Error",
+										JOptionPane.ERROR_MESSAGE);
 							}
-						} else {
-							System.out.println("Info: No Text in Text Field");
-						}
+							break;
+						case 1:
+							try {
+								if (!TextField.getText().trim().equals("")) {
+									MyButton button;
+									int component_num = card_list.get(currentPanel_idx).getComponentList().size();
+									button = new MyButton(20, TextField.getText(),
+											"mov_card," + (card_list.size()),
+											new Color(6, 42, 120));
+									button.enableTexture();
+									card_list.get(currentPanel_idx).getComponentList().add(button);
+
+									GridBagConstraints gbc = new GridBagConstraints();
+									gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
+									gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
+									gbc.gridwidth = (win_width - 140) / 2 - 40;
+									gbc.gridheight = 30;
+									gbc.weightx = 1.0d;
+									gbc.fill = GridBagConstraints.NONE;
+									gbc.insets = new Insets(10, 10, 10, 10);
+									((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+											.getLayout())).setConstraints(button, gbc);
+
+									card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
+
+									ArrayList<JComponent> component_list = new ArrayList<>();
+									JPanel card = new ChartPanel(0, new Color(200, 200, 200), 20, 60,
+											win_width - 140,
+											win_height / 2 - 40);
+									card.setLayout(new GridBagLayout());
+									JScrollPane sp = new ChartScrollPane(card);
+									component_list.add(0, card);
+									card_list.add(new MyCard(sp, component_list));
+									MainPanel.add(sp);
+
+									ObjectIO.saveObject(".obj/object_list.dat", card_list);
+									System.out.println("Info: Make New Page (" + currentPanel_idx + ", "
+											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
+								} else {
+									if (TextField.getText().trim().equals("")) {
+										System.out.println("Info: No Text in Text Field");
+									}
+								}
+							} catch (NullPointerException err) {
+								err.printStackTrace();
+								JOptionPane.showMessageDialog(this, err.getMessage(), "Error",
+										JOptionPane.ERROR_MESSAGE);
+							}
+							break;
+						default:
+							System.out.println("Info: Undefined combobox[" + ButtonType.getSelectedIndex() + "] ("
+									+ ButtonType.getSelectedItem() + ")");
+							break;
+					}
+					break;
+				case "mov_card":
+					try {
+						card_list.get(currentPanel_idx).getScrollPane().setVisible(false);
+						currentPanel_idx = Integer.parseInt(token[1]);
+						card_list.get(currentPanel_idx).getScrollPane().setVisible(true);
+					} catch (NumberFormatException err) {
+						err.printStackTrace();
+						currentPanel_idx = 0;
 					}
 					break;
 				case "mov_panel":
@@ -232,6 +320,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					System.out.println("Undefined signal");
 			}
 		}
+		InfoLabel.setText(MyClipBoard.getClipBoard());
 	}
 }
 
@@ -317,5 +406,28 @@ class MyToolTip extends JToolTip {
 		tip.updateUI();
 		tip.setComponent(this);
 		return tip;
+	}
+}
+
+class MyClipBoard {
+	public static String getClipBoard() {
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Clipboard clip = kit.getSystemClipboard();
+
+		try {
+			return (String) clip.getData(DataFlavor.stringFlavor);
+		} catch (UnsupportedFlavorException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	public static void setClipBoard(String str) {// copying words
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		Clipboard clip = kit.getSystemClipboard();
+
+		StringSelection ss = new StringSelection(str);
+		clip.setContents(ss, ss);
 	}
 }

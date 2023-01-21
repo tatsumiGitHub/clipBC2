@@ -19,6 +19,7 @@ $(CLASS): $(SRC)
 
 clean:;	\rm -f *.jar *.class */*.class */*/*.class */*/*/*.class \
 		*~ */*~ */*/*~ */*/*/*~ \
+		.obj/object_list.dat
 
 jar:; jar -cvfm clipBC2.jar manifest.mf \
 		*.class \

@@ -40,8 +40,9 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		JPanel BasePanel = new JPanel();
 		JPanel OptionPanel = new JPanel();
 		CardLayout BaseLayout = new CardLayout();
+
+		MyPanel MainPanel = new MyPanel(0, gray);
 		MyButton.setWindowSize(width, height);
-		MyButton.setBaseCard(BasePanel, BaseLayout);
 
 		setTitle(title);
 		this.setIconImage((new ImageIcon(Base64Image.decodedImage(app_img))).getImage());
@@ -66,13 +67,13 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		InformationPanel.setBackground(blue);
 		label = new ChartLabel(15, "Clip Board: ", white, 20, 5, 640, 15);
 		InformationPanel.add(label);
-		label = new ChartLabel(15, "Text", white, 120, 5, 640, 15);
+		label = new ChartLabel(15, "", white, 120, 5, 640, 15);
 		InformationPanel.add(label);
+		MyButton.setBaseCard(BasePanel, BaseLayout, MainPanel, label);
 
 		//////////////////////
 		///// Main Panel /////
 		//////////////////////
-		MyPanel MainPanel = new MyPanel(0, gray);
 		MainPanel.setLayout(null);
 		label = new ChartLabel(40, "clipBC 2", blue,
 				40, 0, 480, 60);
@@ -91,30 +92,15 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 
 			card = new ChartPanel(0, white_gray, 20, 60, width - 140, height / 2 - 40);
 			card.setLayout(new GridBagLayout());
-			//card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
-			/*
-			 * /// card [benchmark button]
-			 * button = new ChartButton(20, "benchmark", "mov_card,benchmark", blue, 20, 10,
-			 * (width - 140) / 2 - 40, 30);
-			 * button.enableTexture();
-			 * component_list.add(button);
-			 * /// card [gpgpu-sim button]
-			 * button = new ChartButton(20, "gpgpu-sim", "mov_card,gpgpu-sim", blue, (width
-			 * - 140) / 2 + 20, 10,
-			 * (width - 140) / 2 - 40, 30);
-			 * button.enableTexture();
-			 * component_list.add(button);
-			 * for (JComponent component : component_list) {
-			 * card.add(component);
-			 * }
-			 */
 			sp = new ChartScrollPane(card);
 			component_list.add(0, card);
 			card_list.add(new MyCard(sp, component_list));
 			ObjectIO.saveObject(".obj/object_list.dat", card_list);
 		}
 		MyButton.setCardList(card_list);
-		MainPanel.add(card_list.get(0).getScrollPane());
+		for (MyCard c : card_list) {
+			MainPanel.add(c.getScrollPane());
+		}
 
 		////////////////////////////
 		///// add Button Panel /////
@@ -155,12 +141,15 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		MainCommand.setupIcon(0);
 		ChartButton AddButtonCommand = new ChartButton(20, "add", "mov_panel,AddButtonPanel", black, 120, 5, 40, 40);
 		AddButtonCommand.setupIcon(0);
+		ChartButton HomeCommand = new ChartButton(20, "home", "home,", black, 180, 5, 40, 40);
+		HomeCommand.setupIcon(0);
 		ChartButton CloseCommand = new ChartButton(20, "close", "close,", black, width - 140, 5, 40, 40);
 		CloseCommand.setupIcon(1);
 
 		{
 			OptionCard.add(MainCommand);
 			OptionCard.add(AddButtonCommand);
+			OptionCard.add(HomeCommand);
 			OptionCard.add(CloseCommand);
 		}
 
