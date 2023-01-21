@@ -199,18 +199,22 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 						if (!TextField.getText().trim().equals("")) {
 							if (!TextArea.getText().trim().equals("")) {
 								int component_num = card_list.get(currentPanel_idx).getComponentList().size();
-								int x = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
-								int y = 10 + ((component_num - 1) / 2) * 40;
-								int width = (win_width - 140) / 2 - 40;
-								int height = 30;
+
 								MyButton button;
-								button = new ChartButton(20, TextField.getText(), "mov_card,gpgpu-sim",
-										new Color(6, 42, 120),
-										x, y, width, height);
+								button = new MyButton(20, TextField.getText(), "mov_card,gpgpu-sim", new Color(6, 42, 120));
 								button.enableTexture();
 								card_list.get(currentPanel_idx).getComponentList().add(button);
-								card_list.get(currentPanel_idx).getComponentList().get(0)
-										.add(Box.createRigidArea(new Dimension(5, 5)));
+								
+								GridBagConstraints gbc = new GridBagConstraints();
+
+								gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
+								gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
+								gbc.gridwidth = (win_width - 140) / 2 - 40;
+								gbc.gridheight = 30;
+								gbc.weightx = 1.0d;
+								gbc.fill = GridBagConstraints.NONE;
+								gbc.insets = new Insets(10, 10, 10, 10);
+								((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0).getLayout())).setConstraints(button, gbc);
 								card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
 								ObjectIO.saveObject(".obj/object_list.dat", card_list);
 							} else {

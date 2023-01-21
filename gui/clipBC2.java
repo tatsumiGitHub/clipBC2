@@ -85,12 +85,13 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		///// Main Card /////
 		/////////////////////
 		ArrayList<MyCard> card_list = (ArrayList) ObjectIO.loadObject(".obj/object_list.dat");
-		if (card_list == null) {
+		if (card_list == null || true) {
 			card_list = new ArrayList<>();
 			ArrayList<JComponent> component_list = new ArrayList<>();
 
 			card = new ChartPanel(0, white_gray, 20, 60, width - 140, height / 2 - 40);
-			card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
+			card.setLayout(new GridBagLayout());
+			//card.setLayout(new BoxLayout(card, BoxLayout.PAGE_AXIS));
 			/*
 			 * /// card [benchmark button]
 			 * button = new ChartButton(20, "benchmark", "mov_card,benchmark", blue, 20, 10,
