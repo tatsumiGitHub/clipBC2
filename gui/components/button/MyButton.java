@@ -1,6 +1,8 @@
 package gui.components.button;
 
 import java.util.ArrayList;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.io.*;
 
 import javax.swing.*;
@@ -20,10 +22,12 @@ import gui.components.textfield.*;
 import system.*;
 
 public class MyButton extends JButton implements ActionListener, clipBC2_Image {
+	private static Deque<Integer> page_deque = new ArrayDeque<>();
 	private static int win_width = 0;
 	private static int win_height = 0;
-	private static JPanel BasePanel = null;
+	private static JButton BackButton = null;
 	private static CardLayout BaseLayout = null;
+	private static JPanel BasePanel = null;
 	private static JPanel MainPanel = null;
 	private static JLabel InfoLabel = null;
 	private static int currentPanel_idx = 0;
@@ -112,6 +116,12 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[1]))));
 				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[2]))));
 				break;
+			case 5:
+				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(back_img[0]))));
+				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(back_img[1]))));
+				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(back_img[2]))));
+				this.setDisabledIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(back_img[3]))));
+				break;
 			default:
 				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(default_img[0]))));
 				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(default_img[1]))));
@@ -183,11 +193,13 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		win_height = _win_height;
 	}
 
-	public static void setBaseCard(JPanel _BasePanel, CardLayout _BaseLayout, JPanel _MaiPanel, JLabel _InfoLabel) {
+	public static void setBaseCard(JPanel _BasePanel, CardLayout _BaseLayout, JPanel _MaiPanel, JLabel _InfoLabel,
+			JButton _BackButton) {
 		BasePanel = _BasePanel;
 		BaseLayout = _BaseLayout;
 		MainPanel = _MaiPanel;
 		InfoLabel = _InfoLabel;
+		BackButton = _BackButton;
 	}
 
 	public static void setCardList(ArrayList<MyCard> _card_list) {
@@ -254,6 +266,10 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					}
 					break;
 				case "home":
+					if (currentPanel_idx != 0) {
+						page_deque.push(currentPanel_idx);
+						BackButton.setEnabled(true);
+					}
 					card_list.get(currentPanel_idx).getScrollPane().setVisible(false);
 					currentPanel_idx = 0;
 					card_list.get(currentPanel_idx).getScrollPane().setVisible(true);
@@ -355,8 +371,20 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 							break;
 					}
 					break;
+				case "mov_back":
+					if (0 < page_deque.size()) {
+						card_list.get(currentPanel_idx).getScrollPane().setVisible(false);
+						currentPanel_idx = page_deque.pop();
+						card_list.get(currentPanel_idx).getScrollPane().setVisible(true);
+					}
+					if (page_deque.size() < 1) {
+						BackButton.setEnabled(false);
+					}
+					break;
 				case "mov_card":
 					try {
+						page_deque.push(currentPanel_idx);
+						BackButton.setEnabled(true);
 						card_list.get(currentPanel_idx).getScrollPane().setVisible(false);
 						currentPanel_idx = Integer.parseInt(token[1]);
 						card_list.get(currentPanel_idx).getScrollPane().setVisible(true);

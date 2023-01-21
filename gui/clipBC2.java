@@ -34,9 +34,9 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		Color black = new Color(25, 25, 25);
 		Color white = new Color(255, 255, 255);
 
-		//////////////////////
-		///// All JPanel /////
-		//////////////////////
+		///////////////////////////
+		///// Base Components /////
+		///////////////////////////
 		JPanel BasePanel = new JPanel();
 		JPanel OptionPanel = new JPanel();
 		CardLayout BaseLayout = new CardLayout();
@@ -49,6 +49,27 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		setBounds(150, 150, width, height);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+		//////////////////////////////////
+		///// Information Components /////
+		//////////////////////////////////
+		JPanel InformationPanel;
+		JLabel InfoLabel;
+		JLabel ClipBoardLabel;
+
+		/////////////////////////////
+		///// Option Components /////
+		/////////////////////////////
+		MyPanel OptionCard;
+		ChartButton BackCommand;
+		ChartButton HomeCommand;
+		ChartButton MainCommand;
+		ChartButton AddButtonCommand;
+		ChartButton DelCommand;
+		ChartButton CloseCommand;
+
+		//////////////////////////
+		///// tmp Components /////
+		//////////////////////////
 		ChartButton button;
 		ChartCheckBox checkbox;
 		ChartComboBox combobox;
@@ -60,16 +81,46 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		////////////////////////////
 		///// Information Card /////
 		////////////////////////////
-		JPanel InformationPanel = new JPanel();
+		InformationPanel = new JPanel();
 		InformationPanel.setLayout(null);
 		InformationPanel.setBounds(0, 0, 640, 25);
 		InformationPanel.setPreferredSize(new Dimension(640, 25));
 		InformationPanel.setBackground(blue);
-		label = new ChartLabel(15, "Clip Board: ", white, 20, 5, 640, 15);
-		InformationPanel.add(label);
-		label = new ChartLabel(15, "", white, 120, 5, 640, 15);
-		InformationPanel.add(label);
-		MyButton.setBaseCard(BasePanel, BaseLayout, MainPanel, label);
+		InfoLabel = new ChartLabel(15, "Clip Board: ", white, 20, 5, 640, 15);
+		ClipBoardLabel = new ChartLabel(15, "", white, 120, 5, 640, 15);
+		InformationPanel.add(InfoLabel);
+		InformationPanel.add(ClipBoardLabel);
+
+		////////////////////////
+		///// Option Panel /////
+		////////////////////////
+		OptionCard = new MyPanel(2, blue);
+		OptionCard.setLayout(null);
+		OptionCard.setChart(0, 0, width, 50);
+
+		BackCommand = new ChartButton(20, "back", "mov_back,", black, 60, 5, 40, 40);
+		BackCommand.setupIcon(5);
+		BackCommand.setEnabled(false);
+		HomeCommand = new ChartButton(20, "home", "home,", black, 120, 5, 40, 40);
+		HomeCommand.setupIcon(1);
+		MainCommand = new ChartButton(20, "main", "mov_panel,MainPanel", black, 180, 5, 40, 40);
+		MainCommand.setupIcon(0);
+		AddButtonCommand = new ChartButton(20, "add", "mov_panel,AddButtonPanel", black, 240, 5, 40, 40);
+		AddButtonCommand.setupIcon(2);
+		DelCommand = new ChartButton(20, "del", "mov_panel,DelButtonPanel", black, 300, 5, 40, 40);
+		DelCommand.setupIcon(3);
+		CloseCommand = new ChartButton(20, "close", "close,", black, width - 140, 5, 40, 40);
+		CloseCommand.setupIcon(4);
+		MyButton.setBaseCard(BasePanel, BaseLayout, MainPanel, ClipBoardLabel, BackCommand);
+
+		{
+			OptionCard.add(BackCommand);
+			OptionCard.add(MainCommand);
+			OptionCard.add(AddButtonCommand);
+			OptionCard.add(HomeCommand);
+			OptionCard.add(DelCommand);
+			OptionCard.add(CloseCommand);
+		}
 
 		//////////////////////
 		///// Main Panel /////
@@ -143,6 +194,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		DelButtonPanel.add(label);
 		items = new String[0];
 		combobox = new ChartComboBox(20, items, width - 300, 80, 200, 30);
+		DelCommand.setDelButton(combobox);
 		DelButtonPanel.add(combobox);
 		button = new ChartButton(20, "Delete", "del_button,", black,
 				width - 300, 240, 200, 30);
@@ -154,33 +206,6 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		checkbox.setupIcon(1);
 		DelButtonPanel.add(checkbox);
 		DelButtonPanel.add(button);
-
-		///////////////////////
-		///// Option Card /////
-		///////////////////////
-		MyPanel OptionCard = new MyPanel(2, blue);
-		OptionCard.setLayout(null);
-		OptionCard.setChart(0, 0, width, 50);
-
-		ChartButton HomeCommand = new ChartButton(20, "home", "home,", black, 60, 5, 40, 40);
-		HomeCommand.setupIcon(1);
-		ChartButton MainCommand = new ChartButton(20, "main", "mov_panel,MainPanel", black, 150, 5, 40, 40);
-		MainCommand.setupIcon(0);
-		ChartButton AddButtonCommand = new ChartButton(20, "add", "mov_panel,AddButtonPanel", black, 210, 5, 40, 40);
-		AddButtonCommand.setupIcon(2);
-		ChartButton DelCommand = new ChartButton(20, "del", "mov_panel,DelButtonPanel", black, 300, 5, 40, 40);
-		DelCommand.setupIcon(3);
-		DelCommand.setDelButton(combobox);
-		ChartButton CloseCommand = new ChartButton(20, "close", "close,", black, width - 140, 5, 40, 40);
-		CloseCommand.setupIcon(4);
-
-		{
-			OptionCard.add(MainCommand);
-			OptionCard.add(AddButtonCommand);
-			OptionCard.add(HomeCommand);
-			OptionCard.add(DelCommand);
-			OptionCard.add(CloseCommand);
-		}
 
 		///////////////////////
 		///// Base Layout /////
