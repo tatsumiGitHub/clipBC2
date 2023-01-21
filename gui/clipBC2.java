@@ -85,7 +85,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		///// Main Card /////
 		/////////////////////
 		ArrayList<MyCard> card_list = (ArrayList) ObjectIO.loadObject(".obj/object_list.dat");
-		if (card_list == null || true) {
+		if (card_list == null) {
 			card_list = new ArrayList<>();
 			ArrayList<JComponent> component_list = new ArrayList<>();
 
