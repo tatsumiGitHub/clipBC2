@@ -1,5 +1,6 @@
 package gui.components.scrollpane;
 
+import java.awt.*;
 import javax.swing.*;
 
 public class ChartScrollPane extends JScrollPane {

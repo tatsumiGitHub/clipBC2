@@ -11,7 +11,6 @@ public class MyPanel extends JPanel {
 		if (col != null) {
 			this.setBackground(col);
 		}
-		this.setLayout(null);
 	}
 
 	public void setChart(int x, int y, int width, int height) {
@@ -31,5 +30,11 @@ public class MyPanel extends JPanel {
 				g.drawLine(0, 0, 640, 0);
 				break;
 		}
+	}
+
+	@Override
+	public MyPanel clone() throws CloneNotSupportedException {
+		MyPanel clone = (MyPanel) super.clone();
+		return clone;
 	}
 }

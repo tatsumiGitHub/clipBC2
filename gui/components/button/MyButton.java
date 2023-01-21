@@ -1,5 +1,7 @@
 package gui.components.button;
 
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.plaf.DimensionUIResource;
 
@@ -8,14 +10,31 @@ import java.awt.event.*;
 import java.awt.geom.*;
 
 import gui.components.*;
+import gui.components.combobox.*;
+import gui.components.panel.*;
+import gui.components.scrollpane.*;
+import gui.components.textarea.*;
+import gui.components.textfield.*;
+import system.*;
 
 public class MyButton extends JButton implements ActionListener, clipBC2_Image {
+	private static int win_width = 0;
+	private static int win_height = 0;
+	private static JPanel BasePanel = null;
+	private static CardLayout BaseLayout = null;
+	private static int currentPanel_idx = 0;
+
 	private boolean enable_texture = false;
 	private Color default_background = new Color(250, 250, 250, 0);// not selecting
 	private Color default_foreground = new Color(100, 100, 100, 250);// not selecting foreground color
-	private Color selecting_background = new Color(6, 199, 85, 250);// selecting background color
+	private Color selecting_background = new Color(102, 204, 255, 250);// selecting background color
 	private Color selecting_foreground = new Color(250, 250, 250, 0);// selecting foreground color
 	private int R = 20;
+
+	private static ArrayList<MyCard> card_list = new ArrayList<>();
+	private MyComboBox ButtonType = null;
+	private MyTextArea TextArea = null;
+	private MyTextField TextField = null;
 
 	public MyButton(int size, String text, String cmd, Color col) {// Basis Button
 		this.addActionListener(this);
@@ -26,6 +45,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		if (cmd.equals("execute")) {
 			this.setEnabled(false);
 		}
+		currentPanel_idx = 0;
 	}
 
 	public void enableTexture() {
@@ -70,21 +90,6 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 
 		switch (n) {
 			case 1:
-				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(run_img[0]))));
-				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(run_img[1]))));
-				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(run_img[2]))));
-				break;
-			case 2:
-				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(file_img[0]))));
-				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(file_img[1]))));
-				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(file_img[2]))));
-				break;
-			case 3:
-				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(cancel_img[0]))));
-				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(cancel_img[1]))));
-				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(cancel_img[2]))));
-				break;
-			case 4:
 				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[0]))));
 				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[1]))));
 				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[2]))));
@@ -155,13 +160,69 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		return po;
 	}
 
+	public static void setWindowSize(int _win_width, int _win_height) {
+		win_width = _win_width;
+		win_height = _win_height;
+	}
+
+	public static void setBaseCard(JPanel _BasePanel, CardLayout _BaseLayout) {
+		BasePanel = _BasePanel;
+		BaseLayout = _BaseLayout;
+	}
+
+	public static void setCardList(ArrayList<MyCard> _card_list) {
+		card_list = _card_list;
+	}
+
+	public static ArrayList<MyCard> getCardList() {
+		return card_list;
+	}
+
+	public void setAddButton(MyComboBox _ButtonType, MyTextArea _TextArea, MyTextField _TextField) {
+		ButtonType = _ButtonType;
+		TextArea = _TextArea;
+		TextField = _TextField;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 		if (cmd != null) {
-			switch (cmd) {
+			String[] token = cmd.split(",", 2);
+			switch (token[0]) {
 				case "close":
 					System.exit(0);
+					break;
+				case "make_button":
+					if (ButtonType.getSelectedItem().equals("Clip Board") && TextField.getText() != null
+							&& TextArea.getText() != null) {
+						if (!TextField.getText().trim().equals("")) {
+							if (!TextArea.getText().trim().equals("")) {
+								int component_num = card_list.get(currentPanel_idx).getComponentList().size();
+								int x = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
+								int y = 10 + ((component_num - 1) / 2) * 40;
+								int width = (win_width - 140) / 2 - 40;
+								int height = 30;
+								MyButton button;
+								button = new ChartButton(20, TextField.getText(), "mov_card,gpgpu-sim",
+										new Color(6, 42, 120),
+										x, y, width, height);
+								button.enableTexture();
+								card_list.get(currentPanel_idx).getComponentList().add(button);
+								card_list.get(currentPanel_idx).getComponentList().get(0)
+										.add(Box.createRigidArea(new Dimension(5, 5)));
+								card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
+								ObjectIO.saveObject(".obj/object_list.dat", card_list);
+							} else {
+								System.out.println("Info: No Text in Text Field");
+							}
+						} else {
+							System.out.println("Info: No Text in Text Field");
+						}
+					}
+					break;
+				case "mov_panel":
+					BaseLayout.show(BasePanel, token[1]);
 					break;
 				default:
 					System.out.println("Undefined signal");
