@@ -74,7 +74,7 @@ public class MyCheckBox extends JCheckBox implements ActionListener, clipBC2_Ima
 		String cmd = e.getActionCommand();
 		if (cmd != null) {
 			switch (cmd) {
-				case "agreement":
+				case "delete_button":
 					if (this.isSelected()) {
 						button.setEnabled(true);
 					} else {

@@ -36,7 +36,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 	private int R = 20;
 
 	private static ArrayList<MyCard> card_list = new ArrayList<>();
-	private MyComboBox ButtonType = null;
+	private MyComboBox combobox = null;
 	private MyTextArea TextArea = null;
 	private MyTextField TextField = null;
 
@@ -46,7 +46,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		this.setForeground(col);
 		this.setText(text);
 		this.setFont(new Font(Font.DIALOG, Font.BOLD, size));
-		if (cmd.equals("execute")) {
+		if (cmd.equals("del_button,")) {
 			this.setEnabled(false);
 		}
 	}
@@ -93,6 +93,21 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 
 		switch (n) {
 			case 1:
+				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(home_img[0]))));
+				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(home_img[1]))));
+				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(home_img[2]))));
+				break;
+			case 2:
+				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(make_img[0]))));
+				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(make_img[1]))));
+				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(make_img[2]))));
+				break;
+			case 3:
+				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(delete_img[0]))));
+				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(delete_img[1]))));
+				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(delete_img[2]))));
+				break;
+			case 4:
 				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[0]))));
 				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[1]))));
 				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(close_img[2]))));
@@ -183,8 +198,12 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		return card_list;
 	}
 
-	public void setAddButton(MyComboBox _ButtonType, MyTextArea _TextArea, MyTextField _TextField) {
-		ButtonType = _ButtonType;
+	public void setDelButton(MyComboBox _combobox) {
+		combobox = _combobox;
+	}
+
+	public void setAddButton(MyComboBox _combobox, MyTextArea _TextArea, MyTextField _TextField) {
+		combobox = _combobox;
 		TextArea = _TextArea;
 		TextField = _TextField;
 	}
@@ -192,6 +211,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
+		GridBagConstraints gbc;
 		if (cmd != null) {
 			String[] token = cmd.split(",", 2);
 			switch (token[0]) {
@@ -201,6 +221,37 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 				case "clipboard":
 					MyClipBoard.setClipBoard(token[1]);
 					break;
+				case "del_button":
+					if (combobox.getSelectedIndex() != -1) {
+						int idx = 0;
+						card_list.get(currentPanel_idx).getComponentList().get(0).remove(combobox.getSelectedIndex());
+						card_list.get(currentPanel_idx).getComponentList().remove(combobox.getSelectedIndex() + 1);
+
+						combobox.removeAllItems();
+						for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+							if (c instanceof JButton) {
+								gbc = new GridBagConstraints();
+								gbc.gridx = (idx % 2 == 0) ? 20 : (win_width - 140) / 2 + 20;
+								gbc.gridy = 10 + (idx / 2) * 40;
+								gbc.gridwidth = (win_width - 140) / 2 - 40;
+								gbc.gridheight = 30;
+								gbc.weightx = 1.0d;
+								gbc.fill = GridBagConstraints.NONE;
+								gbc.insets = new Insets(10, 10, 10, 10);
+								((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+										.getLayout())).setConstraints((JButton) c, gbc);
+								combobox.addItem(((JButton) c).getText());
+								idx++;
+							}
+						}
+						ObjectIO.saveObject(".obj/object_list.dat", card_list);
+						System.out.println("Info: Delete New Button (" + currentPanel_idx + ", "
+								+ combobox.getSelectedIndex() + ")");
+						if (combobox.getSelectedIndex() != -1) {
+							combobox.setSelectedIndex(0);
+						}
+					}
+					break;
 				case "home":
 					card_list.get(currentPanel_idx).getScrollPane().setVisible(false);
 					currentPanel_idx = 0;
@@ -208,7 +259,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					BaseLayout.show(BasePanel, "MainPanel");
 					break;
 				case "make_button":
-					switch (ButtonType.getSelectedIndex()) {
+					switch (combobox.getSelectedIndex()) {
 						case 0:
 							try {
 								if (!TextField.getText().trim().equals("") && !TextArea.getText().trim().equals("")) {
@@ -220,7 +271,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									button.enableTexture();
 									card_list.get(currentPanel_idx).getComponentList().add(button);
 
-									GridBagConstraints gbc = new GridBagConstraints();
+									gbc = new GridBagConstraints();
 									gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
 									gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
 									gbc.gridwidth = (win_width - 140) / 2 - 40;
@@ -260,7 +311,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									button.enableTexture();
 									card_list.get(currentPanel_idx).getComponentList().add(button);
 
-									GridBagConstraints gbc = new GridBagConstraints();
+									gbc = new GridBagConstraints();
 									gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
 									gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
 									gbc.gridwidth = (win_width - 140) / 2 - 40;
@@ -298,8 +349,8 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 							}
 							break;
 						default:
-							System.out.println("Info: Undefined combobox[" + ButtonType.getSelectedIndex() + "] ("
-									+ ButtonType.getSelectedItem() + ")");
+							System.out.println("Info: Undefined combobox[" + combobox.getSelectedIndex() + "] ("
+									+ combobox.getSelectedItem() + ")");
 							break;
 					}
 					break;
@@ -315,6 +366,14 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					break;
 				case "mov_panel":
 					BaseLayout.show(BasePanel, token[1]);
+					if (token[1].equals("DelButtonPanel")) {
+						combobox.removeAllItems();
+						for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+							if (c instanceof JButton) {
+								combobox.addItem(((JButton) c).getText());
+							}
+						}
+					}
 					break;
 				default:
 					System.out.println("Undefined signal");

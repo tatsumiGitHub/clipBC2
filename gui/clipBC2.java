@@ -78,10 +78,10 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		label = new ChartLabel(40, "clipBC 2", blue,
 				40, 0, 480, 60);
 		MainPanel.add(label);
-		checkbox = new ChartCheckBox(15, "Output File", "output_file", black, white, null,
-				width * 2 / 3, 10, 240, 40);
-		checkbox.setupIcon(1);
-		MainPanel.add(checkbox);
+		//checkbox = new ChartCheckBox(15, "Output File", "output_file", black, white, null, width * 2 / 3, 10, 240, 40);
+		//checkbox.setupIcon(1);
+		//MainPanel.add(checkbox);
+
 		/////////////////////
 		///// Main Card /////
 		/////////////////////
@@ -130,6 +130,29 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		button.enableTexture();
 		AddButtonPanel.add(button);
 
+		////////////////////////////
+		///// del Button Panel /////
+		////////////////////////////
+		MyPanel DelButtonPanel = new MyPanel(0, gray);
+		DelButtonPanel.setLayout(null);
+		label = new ChartLabel(40, "Delete Button", blue, 40, 0, 480, 60);
+		DelButtonPanel.add(label);
+		label = new ChartLabel(20, "Button Name", blue, 60, 75, 200, 40);
+		DelButtonPanel.add(label);
+		items = new String[0];
+		combobox = new ChartComboBox(20, items, width - 300, 80, 200, 30);
+		DelButtonPanel.add(combobox);
+		button = new ChartButton(20, "Delete", "del_button,", black,
+				width - 300, 240, 200, 30);
+		button.setDelButton(combobox);
+		button.enableTexture();
+		label = new ChartLabel(20, "Verification", blue, 60, 145, 200, 40);
+		DelButtonPanel.add(label);
+		checkbox = new ChartCheckBox(15, "I delete the button.", "delete_button", black, white, button, width - 290, 150, 240, 40);
+		checkbox.setupIcon(1);
+		DelButtonPanel.add(checkbox);
+		DelButtonPanel.add(button);
+
 		///////////////////////
 		///// Option Card /////
 		///////////////////////
@@ -137,19 +160,23 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		OptionCard.setLayout(null);
 		OptionCard.setChart(0, 0, width, 50);
 
-		ChartButton MainCommand = new ChartButton(20, "main", "mov_panel,MainPanel", black, 60, 5, 40, 40);
+		ChartButton HomeCommand = new ChartButton(20, "home", "home,", black, 60, 5, 40, 40);
+		HomeCommand.setupIcon(1);
+		ChartButton MainCommand = new ChartButton(20, "main", "mov_panel,MainPanel", black, 150, 5, 40, 40);
 		MainCommand.setupIcon(0);
-		ChartButton AddButtonCommand = new ChartButton(20, "add", "mov_panel,AddButtonPanel", black, 120, 5, 40, 40);
-		AddButtonCommand.setupIcon(0);
-		ChartButton HomeCommand = new ChartButton(20, "home", "home,", black, 180, 5, 40, 40);
-		HomeCommand.setupIcon(0);
+		ChartButton AddButtonCommand = new ChartButton(20, "add", "mov_panel,AddButtonPanel", black, 210, 5, 40, 40);
+		AddButtonCommand.setupIcon(2);
+		ChartButton DelCommand = new ChartButton(20, "del", "mov_panel,DelButtonPanel", black, 300, 5, 40, 40);
+		DelCommand.setupIcon(3);
+		DelCommand.setDelButton(combobox);
 		ChartButton CloseCommand = new ChartButton(20, "close", "close,", black, width - 140, 5, 40, 40);
-		CloseCommand.setupIcon(1);
+		CloseCommand.setupIcon(4);
 
 		{
 			OptionCard.add(MainCommand);
 			OptionCard.add(AddButtonCommand);
 			OptionCard.add(HomeCommand);
+			OptionCard.add(DelCommand);
 			OptionCard.add(CloseCommand);
 		}
 
@@ -159,6 +186,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		BasePanel.setLayout(BaseLayout);
 		BasePanel.add(MainPanel, "MainPanel");
 		BasePanel.add(AddButtonPanel, "AddButtonPanel");
+		BasePanel.add(DelButtonPanel, "DelButtonPanel");
 
 		/////////////////////////
 		///// Option Layout /////
