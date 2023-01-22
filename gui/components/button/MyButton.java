@@ -346,6 +346,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									component_list.add(label_tmp);
 									JScrollPane sp = new ChartScrollPane(card);
 									component_list.add(0, card);
+									sp.setVisible(false);
 									card_list.add(new MyCard(sp, component_list));
 									MainPanel.add(sp);
 
