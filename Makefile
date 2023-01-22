@@ -25,7 +25,7 @@ jar:; jar -cvfm clipBC2.jar manifest.mf \
 		*.class \
 		*/*.class \
 		*/*/*.class \
-		*/*/*/*.class \
+		*/*/*/*.class
 
 zip:;
 	zip -r -o clipBC2.zip \
