@@ -45,7 +45,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		MyButton.setWindowSize(width, height);
 
 		setTitle(title);
-		this.setIconImage((new ImageIcon(Base64Image.decodedImage(app_img))).getImage());
+		//this.setIconImage((new ImageIcon(Base64Image.decodedImage(app_img))).getImage());
 		setBounds(150, 150, width, height);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -129,9 +129,10 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		label = new ChartLabel(40, "clipBC 2", blue,
 				40, 0, 480, 60);
 		MainPanel.add(label);
-		//checkbox = new ChartCheckBox(15, "Output File", "output_file", black, white, null, width * 2 / 3, 10, 240, 40);
-		//checkbox.setupIcon(1);
-		//MainPanel.add(checkbox);
+		// checkbox = new ChartCheckBox(15, "Output File", "output_file", black, white,
+		// null, width * 2 / 3, 10, 240, 40);
+		// checkbox.setupIcon(1);
+		// MainPanel.add(checkbox);
 
 		/////////////////////
 		///// Main Card /////
@@ -143,6 +144,16 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 
 			card = new ChartPanel(0, white_gray, 20, 60, width - 140, height / 2 - 40);
 			card.setLayout(new GridBagLayout());
+			MyLabel label_tmp = new MyLabel(20, "Home", blue);
+			card.add(label_tmp);
+			GridBagConstraints gbc = new GridBagConstraints();
+			gbc.gridx = 0;
+			gbc.gridy = 0;
+			gbc.gridwidth = 2;
+			gbc.gridheight = 1;
+			((GridBagLayout) (card.getLayout())).setConstraints(label_tmp, gbc);
+
+			component_list.add(label_tmp);
 			sp = new ChartScrollPane(card);
 			component_list.add(0, card);
 			card_list.add(new MyCard(sp, component_list));
@@ -202,7 +213,8 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		button.enableTexture();
 		label = new ChartLabel(20, "Verification", blue, 60, 145, 200, 40);
 		DelButtonPanel.add(label);
-		checkbox = new ChartCheckBox(15, "I delete the button.", "delete_button", black, white, button, width - 290, 150, 240, 40);
+		checkbox = new ChartCheckBox(15, "I delete the button.", "delete_button", black, white, button, width - 290,
+				150, 240, 40);
 		checkbox.setupIcon(1);
 		DelButtonPanel.add(checkbox);
 		DelButtonPanel.add(button);

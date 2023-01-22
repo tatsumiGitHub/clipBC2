@@ -15,6 +15,7 @@ import java.awt.datatransfer.*;
 
 import gui.components.*;
 import gui.components.combobox.*;
+import gui.components.label.*;
 import gui.components.panel.*;
 import gui.components.scrollpane.*;
 import gui.components.textarea.*;
@@ -35,7 +36,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 	private boolean enable_texture = false;
 	private Color default_background = new Color(250, 250, 250, 0);// not selecting
 	private Color default_foreground = new Color(100, 100, 100, 250);// not selecting foreground color
-	private Color selecting_background = new Color(102, 204, 255, 250);// selecting background color
+	private Color selecting_background = new Color(65,105,225, 250);// selecting background color
 	private Color selecting_foreground = new Color(250, 250, 250, 0);// selecting foreground color
 	private int R = 20;
 
@@ -235,21 +236,18 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					MyClipBoard.setClipBoard(token[1]);
 					break;
 				case "del_button":
-					if (combobox.getSelectedIndex() != -1) {
-						int idx = 0;
-						card_list.get(currentPanel_idx).getComponentList().get(0).remove(combobox.getSelectedIndex());
-						card_list.get(currentPanel_idx).getComponentList().remove(combobox.getSelectedIndex() + 1);
+					if (0 <= combobox.getSelectedIndex()) {
+						int idx = 2;
+						card_list.get(currentPanel_idx).getComponentList().get(0)
+								.remove(combobox.getSelectedIndex() + 1);
+						card_list.get(currentPanel_idx).getComponentList().remove(combobox.getSelectedIndex() + 2);
 
 						combobox.removeAllItems();
 						for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
 							if (c instanceof JButton) {
 								gbc = new GridBagConstraints();
-								gbc.gridx = (idx % 2 == 0) ? 20 : (win_width - 140) / 2 + 20;
-								gbc.gridy = 10 + (idx / 2) * 40;
-								gbc.gridwidth = (win_width - 140) / 2 - 40;
-								gbc.gridheight = 30;
-								gbc.weightx = 1.0d;
-								gbc.fill = GridBagConstraints.NONE;
+								gbc.gridx = idx % 2;
+								gbc.gridy = idx / 2;
 								gbc.insets = new Insets(10, 10, 10, 10);
 								((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
 										.getLayout())).setConstraints((JButton) c, gbc);
@@ -276,12 +274,12 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					BaseLayout.show(BasePanel, "MainPanel");
 					break;
 				case "make_button":
+					int component_num = card_list.get(currentPanel_idx).getComponentList().size();
 					switch (combobox.getSelectedIndex()) {
 						case 0:
 							try {
 								if (!TextField.getText().trim().equals("") && !TextArea.getText().trim().equals("")) {
 									MyButton button;
-									int component_num = card_list.get(currentPanel_idx).getComponentList().size();
 									button = new MyButton(20, TextField.getText(),
 											"clipboard," + TextArea.getText(),
 											new Color(6, 42, 120));
@@ -289,12 +287,8 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									card_list.get(currentPanel_idx).getComponentList().add(button);
 
 									gbc = new GridBagConstraints();
-									gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
-									gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
-									gbc.gridwidth = (win_width - 140) / 2 - 40;
-									gbc.gridheight = 30;
-									gbc.weightx = 1.0d;
-									gbc.fill = GridBagConstraints.NONE;
+									gbc.gridx = component_num % 2;
+									gbc.gridy = component_num / 2;
 									gbc.insets = new Insets(10, 10, 10, 10);
 									((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
 											.getLayout())).setConstraints(button, gbc);
@@ -321,7 +315,6 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 							try {
 								if (!TextField.getText().trim().equals("")) {
 									MyButton button;
-									int component_num = card_list.get(currentPanel_idx).getComponentList().size();
 									button = new MyButton(20, TextField.getText(),
 											"mov_card," + (card_list.size()),
 											new Color(6, 42, 120));
@@ -329,12 +322,8 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									card_list.get(currentPanel_idx).getComponentList().add(button);
 
 									gbc = new GridBagConstraints();
-									gbc.gridx = (component_num % 2 == 1) ? 20 : (win_width - 140) / 2 + 20;
-									gbc.gridy = 10 + ((component_num - 1) / 2) * 40;
-									gbc.gridwidth = (win_width - 140) / 2 - 40;
-									gbc.gridheight = 30;
-									gbc.weightx = 1.0d;
-									gbc.fill = GridBagConstraints.NONE;
+									gbc.gridx = component_num % 2;
+									gbc.gridy = component_num / 2;
 									gbc.insets = new Insets(10, 10, 10, 10);
 									((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
 											.getLayout())).setConstraints(button, gbc);
@@ -346,6 +335,15 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 											win_width - 140,
 											win_height / 2 - 40);
 									card.setLayout(new GridBagLayout());
+									MyLabel label_tmp = new MyLabel(20, TextField.getText(), new Color(6, 42, 120));
+									card.add(label_tmp);
+									gbc = new GridBagConstraints();
+									gbc.gridx = 0;
+									gbc.gridy = 0;
+									gbc.gridwidth = 2;
+									gbc.gridheight = 1;
+									((GridBagLayout) (card.getLayout())).setConstraints(label_tmp, gbc);
+									component_list.add(label_tmp);
 									JScrollPane sp = new ChartScrollPane(card);
 									component_list.add(0, card);
 									card_list.add(new MyCard(sp, component_list));
