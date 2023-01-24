@@ -45,7 +45,8 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		MyButton.setWindowSize(width, height);
 
 		setTitle(title);
-		//this.setIconImage((new ImageIcon(Base64Image.decodedImage(app_img))).getImage());
+		// this.setIconImage((new
+		// ImageIcon(Base64Image.decodedImage(app_img))).getImage());
 		setBounds(150, 150, width, height);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -171,26 +172,53 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		////////////////////////////
 		MyPanel AddButtonPanel = new MyPanel(0, gray);
 		AddButtonPanel.setLayout(null);
+		/// Add Button System ///
 		label = new ChartLabel(40, "Add Button", blue, 40, 0, 480, 60);
 		AddButtonPanel.add(label);
+		// Button Name TextField
 		label = new ChartLabel(20, "Button Name", blue, 60, 65, 200, 40);
 		AddButtonPanel.add(label);
 		textfield = new ChartTextField(20, "", black, white,
 				width - 400, 70, 300, 30);
 		AddButtonPanel.add(textfield);
+		// ClipBoard Text Area
 		label = new ChartLabel(20, "Text Area", blue, 60, 115, 200, 40);
 		AddButtonPanel.add(label);
 		textarea = new ChartTextArea(15, "", black, white, width - 400, 120, 300, 50);
 		sp = new ChartScrollPane(textarea);
 		AddButtonPanel.add(sp);
+		// Button Type ComboBox
 		label = new ChartLabel(20, "Button Type", blue, 60, 205, 200, 40);
 		AddButtonPanel.add(label);
-		String[] items = { "Clip Board", "New Page" };
+		String[] items = new String[2];
+		items[0] = "Clip Board";
+		items[1] = "New Page";
 		combobox = new ChartComboBox(20, items, width - 300, 210, 200, 30);
 		AddButtonPanel.add(combobox);
+		// update CheckBox
+		checkbox = new ChartCheckBox(15, "update", "update", black, white,
+				width - 400, 205, 150, 40);
+		checkbox.setupIcon(1);
+		AddButtonPanel.add(checkbox);
+		// Make Button
 		button = new ChartButton(20, "Make", "make_button,", black,
 				width - 200, 260, 100, 30);
-		button.setAddButton(combobox, textarea, textfield);
+		button.setMyComponents(combobox, textarea, textfield);
+		button.setMyCheckBox(checkbox);
+		button.enableTexture();
+		AddButtonPanel.add(button);
+		/// Load System ///
+		// Load ComboBox
+		items = new String[1];
+		items[0] = "New Button";
+		combobox = new ChartComboBox(20, items, width - 300, 15, 200, 30);
+		AddButtonPanel.add(combobox);
+		button.setMyComboBox_Sub(combobox);
+		AddButtonCommand.setMyComboBox_Sub(combobox);
+		// Load Button
+		button = new ChartButton(20, "Load", "load_button,", black,
+				width - 350, 260, 100, 30);
+		button.setMyComponents(combobox, textarea, textfield);
 		button.enableTexture();
 		AddButtonPanel.add(button);
 
@@ -205,16 +233,17 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		DelButtonPanel.add(label);
 		items = new String[0];
 		combobox = new ChartComboBox(20, items, width - 300, 80, 200, 30);
-		DelCommand.setDelButton(combobox);
+		DelCommand.setMyComboBox(combobox);
 		DelButtonPanel.add(combobox);
 		button = new ChartButton(20, "Delete", "del_button,", black,
 				width - 300, 240, 200, 30);
-		button.setDelButton(combobox);
+		button.setMyComboBox(combobox);
 		button.enableTexture();
 		label = new ChartLabel(20, "Verification", blue, 60, 145, 200, 40);
 		DelButtonPanel.add(label);
-		checkbox = new ChartCheckBox(15, "I delete the button.", "delete_button", black, white, button, width - 290,
-				150, 240, 40);
+		checkbox = new ChartCheckBox(15, "I delete the button.", "delete_button", black, white,
+				width - 290, 150, 240, 40);
+		checkbox.setRelatedButton(button);
 		checkbox.setupIcon(1);
 		DelButtonPanel.add(checkbox);
 		DelButtonPanel.add(button);

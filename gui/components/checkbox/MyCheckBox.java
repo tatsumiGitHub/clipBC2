@@ -10,8 +10,7 @@ import gui.components.*;
 public class MyCheckBox extends JCheckBox implements ActionListener, clipBC2_Image {
 	private JButton button;
 
-	public MyCheckBox(int size, String text, String cmd, Color foreground_col, Color background_col, JButton button) {
-		this.button = button;
+	public MyCheckBox(int size, String text, String cmd, Color foreground_col, Color background_col) {
 		this.setText(text);
 		this.setActionCommand(cmd);
 		this.addActionListener(this);

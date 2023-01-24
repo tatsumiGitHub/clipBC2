@@ -14,6 +14,7 @@ import java.awt.geom.*;
 import java.awt.datatransfer.*;
 
 import gui.components.*;
+import gui.components.checkbox.MyCheckBox;
 import gui.components.combobox.*;
 import gui.components.label.*;
 import gui.components.panel.*;
@@ -36,14 +37,16 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 	private boolean enable_texture = false;
 	private Color default_background = new Color(250, 250, 250, 0);// not selecting
 	private Color default_foreground = new Color(100, 100, 100, 250);// not selecting foreground color
-	private Color selecting_background = new Color(65,105,225, 250);// selecting background color
+	private Color selecting_background = new Color(65, 105, 225, 250);// selecting background color
 	private Color selecting_foreground = new Color(250, 250, 250, 0);// selecting foreground color
 	private int R = 20;
 
 	private static ArrayList<MyCard> card_list = new ArrayList<>();
 	private MyComboBox combobox = null;
+	private MyComboBox combobox_sub = null;
 	private MyTextArea TextArea = null;
 	private MyTextField TextField = null;
+	private MyCheckBox checkbox = null;
 
 	public MyButton(int size, String text, String cmd, Color col) {// Basis Button
 		this.addActionListener(this);
@@ -211,11 +214,19 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		return card_list;
 	}
 
-	public void setDelButton(MyComboBox _combobox) {
+	public void setMyComboBox(MyComboBox _combobox) {
 		combobox = _combobox;
 	}
 
-	public void setAddButton(MyComboBox _combobox, MyTextArea _TextArea, MyTextField _TextField) {
+	public void setMyComboBox_Sub(MyComboBox _combobox_sub) {
+		combobox_sub = _combobox_sub;
+	}
+
+	public void setMyCheckBox(MyCheckBox _checkbox) {
+		checkbox = _checkbox;
+	}
+
+	public void setMyComponents(MyComboBox _combobox, MyTextArea _TextArea, MyTextField _TextField) {
 		combobox = _combobox;
 		TextArea = _TextArea;
 		TextField = _TextField;
@@ -223,6 +234,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		int tmp;
 		String cmd = e.getActionCommand();
 		GridBagConstraints gbc;
 		if (cmd != null) {
@@ -273,6 +285,15 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					card_list.get(currentPanel_idx).getScrollPane().setVisible(true);
 					BaseLayout.show(BasePanel, "MainPanel");
 					break;
+				case "load_button":
+					tmp = combobox.getSelectedIndex();
+					if (tmp != 0) {
+						TextField.setText(
+								((JButton) card_list.get(currentPanel_idx).getComponentList().get(tmp + 1)).getText());
+						TextArea.setText(((JButton) card_list.get(currentPanel_idx).getComponentList().get(tmp + 1))
+								.getActionCommand().split(",", 2)[1]);
+					}
+					break;
 				case "make_button":
 					int component_num = card_list.get(currentPanel_idx).getComponentList().size();
 					switch (combobox.getSelectedIndex()) {
@@ -284,17 +305,39 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 											"clipboard," + TextArea.getText(),
 											new Color(6, 42, 120));
 									button.enableTexture();
-									card_list.get(currentPanel_idx).getComponentList().add(button);
 
 									gbc = new GridBagConstraints();
-									gbc.gridx = component_num % 2;
-									gbc.gridy = component_num / 2;
-									gbc.insets = new Insets(10, 10, 10, 10);
-									((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
-											.getLayout())).setConstraints(button, gbc);
 
-									card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
+									tmp = combobox_sub.getSelectedIndex();
+									if (checkbox.isSelected() && tmp != 0) {
+										gbc.gridx = (tmp + 1) % 2;
+										gbc.gridy = (tmp + 1) / 2;
+										gbc.insets = new Insets(10, 10, 10, 10);
+										((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+												.getLayout())).setConstraints(button, gbc);
+										card_list.get(currentPanel_idx).getComponentList().get(0)
+												.remove(tmp);
+										card_list.get(currentPanel_idx).getComponentList().get(0)
+												.add(button);
+										card_list.get(currentPanel_idx).getComponentList()
+												.set(tmp + 1, button);
+									} else {
+										gbc.gridx = component_num % 2;
+										gbc.gridy = component_num / 2;
+										gbc.insets = new Insets(10, 10, 10, 10);
+										((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+												.getLayout())).setConstraints(button, gbc);
+										card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
+										card_list.get(currentPanel_idx).getComponentList().add(button);
+									}
 
+									combobox_sub.removeAllItems();
+									combobox_sub.addItem("New Button");
+									for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+										if (c instanceof JButton) {
+											combobox_sub.addItem(((JButton) c).getText());
+										}
+									}
 									ObjectIO.saveObject(".obj/object_list.dat", card_list);
 									System.out.println("Info: Make New Button (" + currentPanel_idx + ", "
 											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
@@ -350,6 +393,13 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									card_list.add(new MyCard(sp, component_list));
 									MainPanel.add(sp);
 
+									combobox_sub.removeAllItems();
+									combobox_sub.addItem("New Button");
+									for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+										if (c instanceof JButton) {
+											combobox_sub.addItem(((JButton) c).getText());
+										}
+									}
 									ObjectIO.saveObject(".obj/object_list.dat", card_list);
 									System.out.println("Info: Make New Page (" + currentPanel_idx + ", "
 											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
@@ -394,13 +444,24 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					break;
 				case "mov_panel":
 					BaseLayout.show(BasePanel, token[1]);
-					if (token[1].equals("DelButtonPanel")) {
-						combobox.removeAllItems();
-						for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
-							if (c instanceof JButton) {
-								combobox.addItem(((JButton) c).getText());
+					switch (token[1]) {
+						case "AddButtonPanel":
+							combobox_sub.removeAllItems();
+							combobox_sub.addItem("New Button");
+							for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+								if (c instanceof JButton) {
+									combobox_sub.addItem(((JButton) c).getText());
+								}
 							}
-						}
+							break;
+						case "DelButtonPanel":
+							combobox.removeAllItems();
+							for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+								if (c instanceof JButton) {
+									combobox.addItem(((JButton) c).getText());
+								}
+							}
+							break;
 					}
 					break;
 				default:
