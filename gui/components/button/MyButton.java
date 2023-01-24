@@ -234,7 +234,9 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		InfoLabel.setText(MyClipBoard.getClipBoard());
 		int tmp;
+		String str_tmp;
 		String cmd = e.getActionCommand();
 		GridBagConstraints gbc;
 		if (cmd != null) {
@@ -246,10 +248,12 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					break;
 				case "clipboard":
 					MyClipBoard.setClipBoard(token[1]);
+					InfoLabel.setText(MyClipBoard.getClipBoard());
 					break;
 				case "del_button":
 					if (0 <= combobox.getSelectedIndex()) {
 						int idx = 2;
+						str_tmp = (String) combobox.getSelectedItem();
 						card_list.get(currentPanel_idx).getComponentList().get(0)
 								.remove(combobox.getSelectedIndex() + 1);
 						card_list.get(currentPanel_idx).getComponentList().remove(combobox.getSelectedIndex() + 2);
@@ -268,11 +272,12 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 							}
 						}
 						ObjectIO.saveObject(".obj/object_list.dat", card_list);
-						System.out.println("Info: Delete New Button (" + currentPanel_idx + ", "
+						System.out.println("Info: Delete Button (" + currentPanel_idx + ", "
 								+ combobox.getSelectedIndex() + ")");
 						if (combobox.getSelectedIndex() != -1) {
 							combobox.setSelectedIndex(0);
 						}
+						InfoLabel.setText("Delete Button (" + str_tmp + ")");
 					}
 					break;
 				case "home":
@@ -292,6 +297,13 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 								((JButton) card_list.get(currentPanel_idx).getComponentList().get(tmp + 1)).getText());
 						TextArea.setText(((JButton) card_list.get(currentPanel_idx).getComponentList().get(tmp + 1))
 								.getActionCommand().split(",", 2)[1]);
+						InfoLabel.setText("Load Button ("
+								+ ((JButton) card_list.get(currentPanel_idx).getComponentList().get(tmp + 1)).getText()
+								+ ")");
+					} else {
+						TextField.setText("");
+						TextArea.setText("");
+						InfoLabel.setText("Clear TextField and TextArea");
 					}
 					break;
 				case "make_button":
@@ -341,6 +353,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									ObjectIO.saveObject(".obj/object_list.dat", card_list);
 									System.out.println("Info: Make New Button (" + currentPanel_idx + ", "
 											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
+									InfoLabel.setText("Make New Button (" + button.getText() + ")");
 								} else {
 									if (TextField.getText().trim().equals("")) {
 										System.out.println("Info: No Text in Text Field");
@@ -362,16 +375,31 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 											"mov_card," + (card_list.size()),
 											new Color(6, 42, 120));
 									button.enableTexture();
-									card_list.get(currentPanel_idx).getComponentList().add(button);
 
 									gbc = new GridBagConstraints();
-									gbc.gridx = component_num % 2;
-									gbc.gridy = component_num / 2;
-									gbc.insets = new Insets(10, 10, 10, 10);
-									((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
-											.getLayout())).setConstraints(button, gbc);
 
-									card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
+									tmp = combobox_sub.getSelectedIndex();
+									if (checkbox.isSelected() && tmp != 0) {
+										gbc.gridx = (tmp + 1) % 2;
+										gbc.gridy = (tmp + 1) / 2;
+										gbc.insets = new Insets(10, 10, 10, 10);
+										((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+												.getLayout())).setConstraints(button, gbc);
+										card_list.get(currentPanel_idx).getComponentList().get(0)
+												.remove(tmp);
+										card_list.get(currentPanel_idx).getComponentList().get(0)
+												.add(button);
+										card_list.get(currentPanel_idx).getComponentList()
+												.set(tmp + 1, button);
+									} else {
+										gbc.gridx = component_num % 2;
+										gbc.gridy = component_num / 2;
+										gbc.insets = new Insets(10, 10, 10, 10);
+										((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+												.getLayout())).setConstraints(button, gbc);
+										card_list.get(currentPanel_idx).getComponentList().get(0).add(button);
+										card_list.get(currentPanel_idx).getComponentList().add(button);
+									}
 
 									ArrayList<JComponent> component_list = new ArrayList<>();
 									JPanel card = new ChartPanel(0, new Color(200, 200, 200), 20, 60,
@@ -403,6 +431,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									ObjectIO.saveObject(".obj/object_list.dat", card_list);
 									System.out.println("Info: Make New Page (" + currentPanel_idx + ", "
 											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
+									InfoLabel.setText("Make New Button (" + button.getText() + ")");
 								} else {
 									if (TextField.getText().trim().equals("")) {
 										System.out.println("Info: No Text in Text Field");
@@ -468,7 +497,6 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					System.out.println("Undefined signal");
 			}
 		}
-		InfoLabel.setText(MyClipBoard.getClipBoard());
 	}
 }
 
