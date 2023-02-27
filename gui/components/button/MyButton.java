@@ -327,12 +327,9 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 										gbc.insets = new Insets(10, 10, 10, 10);
 										((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
 												.getLayout())).setConstraints(button, gbc);
-										card_list.get(currentPanel_idx).getComponentList().get(0)
-												.remove(tmp);
-										card_list.get(currentPanel_idx).getComponentList().get(0)
-												.add(button);
-										card_list.get(currentPanel_idx).getComponentList()
-												.set(tmp + 1, button);
+										card_list.get(currentPanel_idx).getComponentList().get(0).remove(tmp);
+										card_list.get(currentPanel_idx).getComponentList().get(0).add(button, tmp);
+										card_list.get(currentPanel_idx).getComponentList().set(tmp + 1, button);
 									} else {
 										gbc.gridx = component_num % 2;
 										gbc.gridy = component_num / 2;
@@ -385,12 +382,9 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 										gbc.insets = new Insets(10, 10, 10, 10);
 										((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
 												.getLayout())).setConstraints(button, gbc);
-										card_list.get(currentPanel_idx).getComponentList().get(0)
-												.remove(tmp);
-										card_list.get(currentPanel_idx).getComponentList().get(0)
-												.add(button);
-										card_list.get(currentPanel_idx).getComponentList()
-												.set(tmp + 1, button);
+										card_list.get(currentPanel_idx).getComponentList().get(0).remove(tmp);
+										card_list.get(currentPanel_idx).getComponentList().get(0).add(button, tmp);
+										card_list.get(currentPanel_idx).getComponentList().set(tmp + 1, button);
 									} else {
 										gbc.gridx = component_num % 2;
 										gbc.gridy = component_num / 2;

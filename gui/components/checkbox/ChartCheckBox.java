@@ -1,6 +1,5 @@
 package gui.components.checkbox;
 
-import javax.swing.*;
 import java.awt.*;
 
 public class ChartCheckBox extends MyCheckBox {
