@@ -545,6 +545,17 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 						card_list.get(currentPanel_idx).getComponentList().set(i + 2, components[sorts[i]]);
 					}
 
+					int i = 1;
+					DefaultListModel model = new DefaultListModel();
+					for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+						if (c instanceof JButton) {
+							model.addElement(String.format("%03d| %s", i, ((JButton) c).getText()));
+							i++;
+						}
+					}
+					
+					list_drag_drop.setModel(model);
+
 					ObjectIO.saveObject(".obj/object_list.dat", card_list);
 					System.out.println("sort buttons");
 					InfoLabel.setText("sort buttons");
