@@ -17,6 +17,7 @@ import gui.components.*;
 import gui.components.checkbox.MyCheckBox;
 import gui.components.combobox.*;
 import gui.components.label.*;
+import gui.components.list.*;
 import gui.components.panel.*;
 import gui.components.scrollpane.*;
 import gui.components.textarea.*;
@@ -42,11 +43,13 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 	private int R = 20;
 
 	private static ArrayList<MyCard> card_list = new ArrayList<>();
+	private MyButton button = null;
 	private MyComboBox combobox = null;
 	private MyComboBox combobox_sub = null;
 	private MyTextArea TextArea = null;
 	private MyTextField TextField = null;
 	private MyCheckBox checkbox = null;
+	private MyList_Drag_Drop list_drag_drop = null;
 
 	public MyButton(int size, String text, String cmd, Color col) {// Basis Button
 		this.addActionListener(this);
@@ -125,6 +128,11 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(back_img[1]))));
 				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(back_img[2]))));
 				this.setDisabledIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(back_img[3]))));
+				break;
+			case 6:
+				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(sort_img[0]))));
+				this.setPressedIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(sort_img[1]))));
+				this.setRolloverIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(sort_img[2]))));
 				break;
 			default:
 				this.setIcon(getResizeIcon(new ImageIcon(Base64Image.decodedImage(default_img[0]))));
@@ -214,6 +222,10 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		return card_list;
 	}
 
+	public void setMyButton(MyButton _button) {
+		button = _button;
+	}
+
 	public void setMyComboBox(MyComboBox _combobox) {
 		combobox = _combobox;
 	}
@@ -232,10 +244,14 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		TextField = _TextField;
 	}
 
+	public void setMyList_Drag_drop(MyList_Drag_Drop _list_drag_drop) {
+		list_drag_drop = _list_drag_drop;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		InfoLabel.setText(MyClipBoard.getClipBoard());
-		int tmp;
+		int tmp, component_num;
 		String str_tmp;
 		String cmd = e.getActionCommand();
 		GridBagConstraints gbc;
@@ -307,7 +323,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					}
 					break;
 				case "make_button":
-					int component_num = card_list.get(currentPanel_idx).getComponentList().size();
+					component_num = card_list.get(currentPanel_idx).getComponentList().size();
 					switch (combobox.getSelectedIndex()) {
 						case 0:
 							try {
@@ -485,7 +501,54 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 								}
 							}
 							break;
+						case "SortButtonPanel":
+							int i = 1;
+							DefaultListModel model = new DefaultListModel();
+							for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
+								if (c instanceof JButton) {
+									model.addElement(String.format("%03d| %s", i, ((JButton) c).getText()));
+									i++;
+								}
+							}
+							if (model.getSize() == 0) {
+								button.setEnabled(false);
+							} else {
+								button.setEnabled(true);
+							}
+							list_drag_drop.setModel(model);
+							break;
 					}
+					break;
+				case "sort_button":
+					gbc = new GridBagConstraints();
+					tmp = list_drag_drop.getModel().getSize();
+					int[] sorts = new int[tmp];
+					try {
+						if (0 < tmp) {
+							for (int i = 0; i < tmp; i++) {
+								str_tmp = (String) list_drag_drop.getModel().getElementAt(i);
+								sorts[i] = Integer.parseInt(str_tmp.split("\\|")[0]) + 1;
+							}
+						}
+					} catch (NumberFormatException ex) {
+						ex.printStackTrace();
+						break;
+					}
+					JComponent[] components = card_list.get(currentPanel_idx).getComponentList()
+							.toArray(new JComponent[tmp]);
+					for (int i = 0; i < tmp; i++) {
+						gbc.gridx = i % 2;
+						gbc.gridy = i / 2 + 1;
+						gbc.insets = new Insets(10, 10, 10, 10);
+						((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0).getLayout()))
+								.setConstraints(components[sorts[i]], gbc);
+						card_list.get(currentPanel_idx).getComponentList().set(i + 2, components[sorts[i]]);
+					}
+
+					ObjectIO.saveObject(".obj/object_list.dat", card_list);
+					System.out.println("sort buttons");
+					InfoLabel.setText("sort buttons");
+
 					break;
 				default:
 					System.out.println("Undefined signal");

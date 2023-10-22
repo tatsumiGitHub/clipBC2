@@ -9,6 +9,7 @@ import gui.components.button.*;
 import gui.components.checkbox.*;
 import gui.components.combobox.*;
 import gui.components.label.*;
+import gui.components.list.*;
 import gui.components.panel.*;
 import gui.components.scrollpane.*;
 import gui.components.textarea.*;
@@ -65,6 +66,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		ChartButton HomeCommand;
 		ChartButton MainCommand;
 		ChartButton AddButtonCommand;
+		ChartButton SortCommand;
 		ChartButton DelCommand;
 		ChartButton CloseCommand;
 
@@ -79,6 +81,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		ChartScrollPane sp;
 		ChartTextArea textarea;
 		ChartTextField textfield;
+		ChartList_Drag_Drop list_drag_drop;
 		////////////////////////////
 		///// Information Card /////
 		////////////////////////////
@@ -108,7 +111,9 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		MainCommand.setupIcon(0);
 		AddButtonCommand = new ChartButton(20, "add", "mov_panel,AddButtonPanel", black, 240, 5, 40, 40);
 		AddButtonCommand.setupIcon(2);
-		DelCommand = new ChartButton(20, "del", "mov_panel,DelButtonPanel", black, 300, 5, 40, 40);
+		SortCommand = new ChartButton(20, "sort", "mov_panel,SortButtonPanel", black, 300, 5, 40, 40);
+		SortCommand.setupIcon(6);
+		DelCommand = new ChartButton(20, "del", "mov_panel,DelButtonPanel", black, 360, 5, 40, 40);
 		DelCommand.setupIcon(3);
 		CloseCommand = new ChartButton(20, "close", "close,", black, width - 140, 5, 40, 40);
 		CloseCommand.setupIcon(4);
@@ -118,6 +123,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 			OptionCard.add(BackCommand);
 			OptionCard.add(MainCommand);
 			OptionCard.add(AddButtonCommand);
+			OptionCard.add(SortCommand);
 			OptionCard.add(HomeCommand);
 			OptionCard.add(DelCommand);
 			OptionCard.add(CloseCommand);
@@ -223,6 +229,24 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		AddButtonPanel.add(button);
 
 		////////////////////////////
+		///// sort Button Panel /////
+		////////////////////////////
+		MyPanel SortButtonPanel = new MyPanel(0, gray);
+		SortButtonPanel.setLayout(null);
+		label = new ChartLabel(40, "Sort Button", blue, 40, 0, 480, 60);
+		SortButtonPanel.add(label);
+		list_drag_drop = new ChartList_Drag_Drop(15, 20, 75, 480, 200);
+		SortCommand.setMyList_Drag_drop(list_drag_drop);
+		sp = new ChartScrollPane(list_drag_drop);
+		button = new ChartButton(20, "Sort", "sort_button,", black,
+				width - 200, 20, 100, 30);
+		button.setMyList_Drag_drop(list_drag_drop);
+		button.enableTexture();
+		SortCommand.setMyButton(button);
+		SortButtonPanel.add(sp);
+		SortButtonPanel.add(button);
+
+		////////////////////////////
 		///// del Button Panel /////
 		////////////////////////////
 		MyPanel DelButtonPanel = new MyPanel(0, gray);
@@ -254,6 +278,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		BasePanel.setLayout(BaseLayout);
 		BasePanel.add(MainPanel, "MainPanel");
 		BasePanel.add(AddButtonPanel, "AddButtonPanel");
+		BasePanel.add(SortButtonPanel, "SortButtonPanel");
 		BasePanel.add(DelButtonPanel, "DelButtonPanel");
 
 		/////////////////////////
