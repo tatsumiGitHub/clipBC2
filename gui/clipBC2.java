@@ -269,6 +269,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 				width - 290, 150, 240, 40);
 		checkbox.setRelatedButton(button);
 		checkbox.setupIcon(1);
+		button.setMyCheckBox(checkbox);
 		DelButtonPanel.add(checkbox);
 		DelButtonPanel.add(button);
 
