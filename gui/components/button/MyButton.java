@@ -268,10 +268,11 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					break;
 				case "del_button":
 					if (0 <= combobox.getSelectedIndex()) {
-						int idx = 2;
+						int idx = 0;
 						str_tmp = (String) combobox.getSelectedItem();
-						card_list.get(currentPanel_idx).getComponentList().get(0)
-								.remove(combobox.getSelectedIndex() + 1);
+						System.out.println("Cardlist: " + ((JButton) card_list.get(currentPanel_idx).getComponentList().get(combobox.getSelectedIndex() + 2)).getText());
+						System.out.println("JPanel  : " + ((JButton) card_list.get(currentPanel_idx).getComponentList().get(0).getComponent(combobox.getSelectedIndex() + 1)).getText());
+						card_list.get(currentPanel_idx).getComponentList().get(0).remove(combobox.getSelectedIndex() + 1);
 						card_list.get(currentPanel_idx).getComponentList().remove(combobox.getSelectedIndex() + 2);
 
 						combobox.removeAllItems();
@@ -279,13 +280,13 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 							if (c instanceof JButton) {
 								gbc = new GridBagConstraints();
 								gbc.gridx = idx % 2;
-								gbc.gridy = idx / 2;
+								gbc.gridy = idx / 2 + 1;
 								gbc.insets = new Insets(10, 10, 10, 10);
 								((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
 										.getLayout())).setConstraints((JButton) c, gbc);
 								combobox.addItem(((JButton) c).getText());
-								idx++;
 							}
+							idx++;
 						}
 						ObjectIO.saveObject(".obj/object_list.dat", card_list);
 						System.out.println("Info: Delete Button (" + currentPanel_idx + ", "
@@ -520,7 +521,6 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					}
 					break;
 				case "sort_button":
-					gbc = new GridBagConstraints();
 					tmp = list_drag_drop.getModel().getSize();
 					int[] sorts = new int[tmp];
 					try {
@@ -534,8 +534,18 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 						ex.printStackTrace();
 						break;
 					}
+					card_list.get(currentPanel_idx).getComponentList().get(0).removeAll();
+					gbc = new GridBagConstraints();
+					gbc.gridx = 0;
+					gbc.gridy = 0;
+					gbc.gridwidth = 2;
+					gbc.gridheight = 1;
+					((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0)
+												.getLayout())).setConstraints(card_list.get(currentPanel_idx).getComponentList().get(1), gbc);
+					card_list.get(currentPanel_idx).getComponentList().get(0).add(card_list.get(currentPanel_idx).getComponentList().get(1));
 					JComponent[] components = card_list.get(currentPanel_idx).getComponentList()
 							.toArray(new JComponent[tmp]);
+					gbc = new GridBagConstraints();
 					for (int i = 0; i < tmp; i++) {
 						gbc.gridx = i % 2;
 						gbc.gridy = i / 2 + 1;
@@ -543,6 +553,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 						((GridBagLayout) (card_list.get(currentPanel_idx).getComponentList().get(0).getLayout()))
 								.setConstraints(components[sorts[i]], gbc);
 						card_list.get(currentPanel_idx).getComponentList().set(i + 2, components[sorts[i]]);
+						card_list.get(currentPanel_idx).getComponentList().get(0).add(components[sorts[i]]);
 					}
 
 					int i = 1;
