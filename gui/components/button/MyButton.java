@@ -348,7 +348,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 												.getLayout())).setConstraints(button, gbc);
 										card_list.get(currentPanel_idx).getComponentList().get(0).add(button, tmp + 1);
 										card_list.get(currentPanel_idx).getComponentList().get(0).remove(tmp);
-										card_list.get(currentPanel_idx).getComponentList().get(0).setComponentZOrder(button, tmp);
+										//card_list.get(currentPanel_idx).getComponentList().get(0).setComponentZOrder(button, tmp);
 										card_list.get(currentPanel_idx).getComponentList().set(tmp + 1, button);
 									} else {
 										gbc.gridx = component_num % 2;
