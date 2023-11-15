@@ -497,6 +497,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									combobox_sub.addItem(((JButton) c).getText());
 								}
 							}
+							BackButton.setEnabled(false);
 							break;
 						case "DelButtonPanel":
 							combobox.removeAllItems();
@@ -505,6 +506,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 									combobox.addItem(((JButton) c).getText());
 								}
 							}
+							BackButton.setEnabled(false);
 							break;
 						case "SortButtonPanel":
 							int i = 1;
@@ -521,6 +523,10 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 								button.setEnabled(true);
 							}
 							list_drag_drop.setModel(model);
+							BackButton.setEnabled(false);
+							break;
+						default:
+							BackButton.setEnabled(true);
 							break;
 					}
 					break;
