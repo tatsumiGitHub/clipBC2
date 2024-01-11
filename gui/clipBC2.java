@@ -144,7 +144,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		/////////////////////
 		///// Main Card /////
 		/////////////////////
-		ArrayList<MyCard> card_list = (ArrayList<MyCard>) ObjectIO.loadObject(".obj/object_list.dat");
+		ArrayList<MyCard> card_list = (ArrayList<MyCard>) ObjectIO.loadObject(".object_list.dat");
 		if (card_list == null) {
 			card_list = new ArrayList<>();
 			ArrayList<JComponent> component_list = new ArrayList<>();
@@ -164,7 +164,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 			sp = new ChartScrollPane(card);
 			component_list.add(0, card);
 			card_list.add(new MyCard(sp, component_list));
-			ObjectIO.saveObject(".obj/object_list.dat", card_list);
+			ObjectIO.saveObject(".object_list.dat", card_list);
 		}
 		MyButton.setCardList(card_list);
 		for (MyCard c : card_list) {

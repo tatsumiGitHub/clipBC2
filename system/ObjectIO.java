@@ -9,8 +9,16 @@ public class ObjectIO {
 			ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file_path)));
 			object = (Object) in.readObject();
 			in.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException err) {
+			System.out.println("ファイル\".object_list.dat\"が存在しないか，破損している可能性があります．");
+			System.out.println("ファイル\".object_list.dat\"を初期化します．");
+			try {
+				ObjectOutputStream out = new ObjectOutputStream(
+						new BufferedOutputStream(new FileOutputStream(file_path)));
+				out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}

@@ -18,10 +18,10 @@ $(CLASS): $(SRC)
 	$(JAVAC) $<
 
 clean:;	\rm -f *.class */*.class */*/*.class */*/*/*.class \
-		*~ */*~ */*/*~ */*/*/*~ \
-		#.obj/object_list.dat
+		*~ */*~ */*/*~ */*/*/*~
 
-jar:; jar -cvfm clipBC2.jar manifest.mf \
+jar:; make
+	  jar -cvfm clipBC2.jar manifest.mf \
 		*.class \
 		*/*.class \
 		*/*/*.class \
@@ -34,6 +34,6 @@ zip:;
 		*/*/*.java \
 		*/*/*/*.java \
 		configs/setup.config \
-		img/* \
+		.img/* \
 		manifest.mf \
 		Makefile \

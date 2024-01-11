@@ -288,7 +288,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 							}
 							idx++;
 						}
-						ObjectIO.saveObject(".obj/object_list.dat", card_list);
+						ObjectIO.saveObject(".object_list.dat", card_list);
 						System.out.println("Info: Delete Button (" + currentPanel_idx + ", "
 								+ combobox.getSelectedIndex() + ")");
 						if (combobox.getSelectedIndex() != -1) {
@@ -367,7 +367,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 											combobox_sub.addItem(((JButton) c).getText());
 										}
 									}
-									ObjectIO.saveObject(".obj/object_list.dat", card_list);
+									ObjectIO.saveObject(".object_list.dat", card_list);
 									System.out.println("Info: Make New Button (" + currentPanel_idx + ", "
 											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
 									InfoLabel.setText("Make New Button (" + button.getText() + ")");
@@ -442,7 +442,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 											combobox_sub.addItem(((JButton) c).getText());
 										}
 									}
-									ObjectIO.saveObject(".obj/object_list.dat", card_list);
+									ObjectIO.saveObject(".object_list.dat", card_list);
 									System.out.println("Info: Make New Page (" + currentPanel_idx + ", "
 											+ card_list.get(currentPanel_idx).getComponentList().size() + ")");
 									InfoLabel.setText("Make New Button (" + button.getText() + ")");
@@ -577,7 +577,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					
 					list_drag_drop.setModel(model);
 
-					ObjectIO.saveObject(".obj/object_list.dat", card_list);
+					ObjectIO.saveObject(".object_list.dat", card_list);
 					System.out.println("sort buttons");
 					InfoLabel.setText("sort buttons");
 
