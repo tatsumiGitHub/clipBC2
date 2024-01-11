@@ -41,15 +41,15 @@ make clean
 |アイコン|内容|
 |-|-|
 |<img src=".img/back/button_base.png" width="40%" />|1つ前に訪れたページへ移動する．|
-|<img src=".img/home/button_base.png" width="40%" />|パネル"clipBC2"へ移動し，ホームページへ移動する．|
-|<img src=".img/button_base.png" width="40%" />|パネル"clipBC2"へ移動する．|
+|<img src=".img/home/button_base.png" width="40%" />|パネル"Main"へ移動し，ホームページへ移動する．|
+|<img src=".img/button_base.png" width="40%" />|パネル"Main"へ移動する．|
 |<img src=".img/make/button_base.png" width="40%" />|パネル"Add Button"へ移動する．|
 |<img src=".img/sort/button_base.png" width="40%" />|パネル"Sort Button"へ移動する．|
 |<img src=".img/delete/button_base.png" width="40%" />|パネル"Delete Button"へ移動する．|
 |<img src=".img/close/button_base.png" width="40%" />|ウィンドウを閉じる．|
 
 各パネルにおける操作方法を以下に記載する．
-### clipBC2
+### Main
 このパネルの中央に位置する四角い領域を**ページ**とよぶ．
 また，初期位置となるページのことを**ホームページ**とよぶ．
 

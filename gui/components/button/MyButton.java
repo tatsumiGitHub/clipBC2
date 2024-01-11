@@ -49,7 +49,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 	private MyTextArea TextArea = null;
 	private MyTextField TextField = null;
 	private MyCheckBox checkbox = null;
-	private MyList_Drag_Drop list_drag_drop = null;
+	private MyList_Drag_Drop<String> list_drag_drop = null;
 
 	public MyButton(int size, String text, String cmd, Color col) {// Basis Button
 		this.addActionListener(this);
@@ -244,7 +244,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 		TextField = _TextField;
 	}
 
-	public void setMyList_Drag_drop(MyList_Drag_Drop _list_drag_drop) {
+	public void setMyList_Drag_drop(MyList_Drag_Drop<String> _list_drag_drop) {
 		list_drag_drop = _list_drag_drop;
 	}
 
@@ -307,6 +307,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					card_list.get(currentPanel_idx).getScrollPane().setVisible(false);
 					currentPanel_idx = 0;
 					card_list.get(currentPanel_idx).getScrollPane().setVisible(true);
+					BackButton.setEnabled(true);
 					BaseLayout.show(BasePanel, "MainPanel");
 					break;
 				case "load_button":
@@ -510,7 +511,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 							break;
 						case "SortButtonPanel":
 							int i = 1;
-							DefaultListModel model = new DefaultListModel();
+							DefaultListModel<String> model = new DefaultListModel<String>();
 							for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
 								if (c instanceof JButton) {
 									model.addElement(String.format("%03d| %s", i, ((JButton) c).getText()));
@@ -567,7 +568,7 @@ public class MyButton extends JButton implements ActionListener, clipBC2_Image {
 					}
 
 					int i = 1;
-					DefaultListModel model = new DefaultListModel();
+					DefaultListModel<String> model = new DefaultListModel<String>();
 					for (JComponent c : card_list.get(currentPanel_idx).getComponentList()) {
 						if (c instanceof JButton) {
 							model.addElement(String.format("%03d| %s", i, ((JButton) c).getText()));

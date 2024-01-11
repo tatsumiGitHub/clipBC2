@@ -8,7 +8,6 @@ import java.io.IOException;
 
 import javax.swing.*;
 
-import java.awt.*;
 import java.awt.datatransfer.*;
 
 public class MyList_Drag_Drop<T> extends JList<T> {

@@ -133,7 +133,7 @@ public class clipBC2 extends JFrame implements clipBC2_Image {
 		///// Main Panel /////
 		//////////////////////
 		MainPanel.setLayout(null);
-		label = new ChartLabel(40, "clipBC 2", blue,
+		label = new ChartLabel(40, "Main", blue,
 				40, 0, 480, 60);
 		MainPanel.add(label);
 		// checkbox = new ChartCheckBox(15, "Output File", "output_file", black, white,

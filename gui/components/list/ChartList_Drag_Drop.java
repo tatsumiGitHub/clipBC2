@@ -2,7 +2,7 @@ package gui.components.list;
 
 import java.awt.*;
 
-public class ChartList_Drag_Drop extends MyList_Drag_Drop {
+public class ChartList_Drag_Drop extends MyList_Drag_Drop<String> {
 
 	public ChartList_Drag_Drop(int size, int x, int y, int width, int height) {
 		super();
